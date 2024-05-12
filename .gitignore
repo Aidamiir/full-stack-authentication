@@ -1,0 +1,13 @@
+.idea
+
+frontend/node_modules
+backend/node_modules
+
+frontend/dist/
+backend/dist/
+
+frontend/build
+backend/build
+
+frontend/.env
+backend/.env

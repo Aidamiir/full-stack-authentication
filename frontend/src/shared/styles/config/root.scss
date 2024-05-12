@@ -1,0 +1,19 @@
+$mainOffset: 16;
+$maxWidth: 1440;
+$minWidth: 375;
+$containerWidth: 1352;
+$maxWidthContainer: $containerWidth + ($mainOffset * 2);
+
+:root {
+  --bs-transition: 0.2s ease-in-out;
+
+  --bs-font-family: 'Open Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --bs-font-size: rem(16);
+  --bs-font-weight: 400;
+  --bs-line-height: 1;
+
+  --default-text-color: #fff;
+  --default-bg-color: #161616;
+  --default-primary-color: #018bde;
+  --default-hover-color: #3fa8ff;
+}

@@ -1,0 +1,48 @@
+#root {
+	block-size: 100%;
+}
+
+[class*="__container"] {
+	max-width: rem($maxWidthContainer);
+	margin: 0 auto;
+	padding: 0 rem($mainOffset);
+}
+
+.auth-wrapper {
+	height: 100%;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.default-input {
+	padding: rem(7) rem(12);
+	border-radius: rem(7);
+	border: rem(3) solid transparent;
+	transition: border-color var(--bs-transition);
+
+	&:focus {
+		border: rem(3) solid var(--default-primary-color);
+	}
+}
+
+.button {
+	border-radius: rem(7);
+	padding: rem(10) rem(15);
+	background-color: var(--default-primary-color);
+	transition: background-color var(--bs-transition);
+
+	@include any-hover {
+		background-color: var(--default-hover-color);
+	}
+
+	&:focus {
+		background-color: var(--default-hover-color);
+	}
+}
+
+.title {
+	font-size: rem(30);
+	font-weight: 500;
+}

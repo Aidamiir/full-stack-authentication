@@ -1,0 +1,131 @@
+@import "mixins";
+
+* {
+	margin: 0;
+	border: 0;
+	padding: 0;
+	-webkit-tap-highlight-color: transparent;
+
+	&,
+	&::before,
+	&::after {
+		box-sizing: border-box;
+	}
+
+	&:focus,
+	&:active {
+		outline: none;
+	}
+
+	::-ms-reveal {
+		display: none;
+	}
+}
+
+html {
+	scroll-behavior: smooth;
+	transition: opacity var(--bs-transition);
+
+	&.loaded {
+		opacity: 1;
+	}
+
+	&.lock {
+		touch-action: none;
+		overflow: hidden;
+	}
+}
+
+html,
+body {
+	block-size: 100%;
+	min-width: $minWidth + px;
+}
+
+body {
+	overscroll-behavior: none;
+	line-height: var(--bs-line-height);
+	text-rendering: optimizelegibility;
+	text-size-adjust: 100%;
+	font-family: var(--bs-font-family);
+	font-size: var(--bs-font-size);
+	font-weight: var(--bs-font-weight);
+	color: var(--default-text-color);
+	background-color: var(--default-bg-color);
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+}
+
+input,
+button,
+textarea {
+	font-family: inherit;
+}
+
+input::-ms-clear {
+	display: none;
+}
+
+input[type="number"] {
+	appearance: textfield;
+
+	&::-webkit-outer-spin-button,
+	&::-webkit-inner-spin-button {
+		appearance: none;
+	}
+}
+
+button {
+	font-size: inherit;
+	color: inherit;
+	cursor: pointer;
+	user-select: none;
+	line-height: 1;
+	background-color: transparent;
+
+	&::-moz-focus-inner {
+		border: 0;
+		padding: 0;
+	}
+
+	&:disabled {
+		cursor: default;
+	}
+}
+
+a {
+	user-select: none;
+	text-decoration: none;
+
+	&:focus,
+	&:active {
+		outline: none;
+	}
+
+	&:visited {
+		text-decoration: none;
+	}
+
+	@include any-hover {
+		text-decoration: none;
+	}
+}
+
+ul,
+li {
+	list-style: none;
+}
+
+img {
+	vertical-align: top;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-size: inherit;
+	font-weight: 400;
+}

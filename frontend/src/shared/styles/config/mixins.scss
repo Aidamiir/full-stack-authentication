@@ -1,0 +1,25 @@
+@import "functions";
+
+@mixin any-hover() {
+	@media (any-hover: hover) {
+		&:hover {
+			@content;
+		}
+	}
+}
+
+@mixin media-mx($value) {
+	$width: em($value);
+
+	@media (max-width: $width) {
+		@content;
+	}
+}
+
+@mixin media-mn($value) {
+	$width: em($value + 0.98);
+
+	@media (min-width: $width) {
+		@content;
+	}
+}
