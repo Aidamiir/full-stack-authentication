@@ -11,3 +11,5 @@ backend/build
 
 frontend/.env
 backend/.env
+
+backend/prisma/migrations/
