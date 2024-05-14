@@ -12,6 +12,9 @@ import { AuthDto } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
+  currentUser(id: string) {
+      throw new Error('Method not implemented.');
+  }
   EXPIRE_DAY_REFRESH_TOKEN = 1;
   REFRESH_TOKEN_NAME = 'refreshToken';
 
@@ -25,7 +28,6 @@ export class AuthService {
     const tokens = this.issueTokens(user.id);
 
     return {
-      user,
       ...tokens,
     };
   }
@@ -40,9 +42,13 @@ export class AuthService {
     const tokens = this.issueTokens(user.id);
 
     return {
-      user,
       ...tokens,
     };
+  }
+
+  async getCurrent(id: string) {
+    const { password, ...user } = await this.userService.getById(id);
+    return user;
   }
 
   async getNewTokens(refreshToken: string) {
@@ -54,7 +60,6 @@ export class AuthService {
     const tokens = this.issueTokens(user.id);
 
     return {
-      user,
       ...tokens,
     };
   }
