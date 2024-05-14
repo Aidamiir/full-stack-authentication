@@ -1,24 +1,29 @@
-import { useNavigate } from 'react-router-dom';
-import { useSignUpMutation } from '../../shared/api';
-import { ROUTES } from '../../shared/constants/routes';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { Credentials } from '../../shared/interfaces/auth.interface';
 import cls from  './sign-up.module.scss';
+
 import React, { useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { Navigate, useNavigate } from 'react-router-dom';
 
-export const SignUpPage = () => {
+import { useSignUpMutation } from '../../shared/api';
+import { ROUTES } from '../../shared/constants';
+import { useAppSelector } from '../../shared/hooks/redux-hooks';
+import type { AuthRequestDto } from '../../shared/interfaces/auth.interface';
+
+
+export default function SignUpPage() {
   const navigation = useNavigate();
   const [token, setToken] = useState('');
+  const isAuth = useAppSelector(({ auth }) => auth.user);
   const [signUp, { isLoading, isError }] = useSignUpMutation();
-  const { register, reset, handleSubmit, formState: { errors } } = useForm<Credentials>();
+  const { register, reset, handleSubmit, formState: { errors } } = useForm<AuthRequestDto>();
 
-  const onSubmit: SubmitHandler<Credentials> = async ({ email, password }) => {
+  const onSubmit: SubmitHandler<AuthRequestDto> = async ({ email, password }) => {
     try {
       await signUp({ email, password, token }).unwrap();
-      navigation(ROUTES.root);
     }
     catch (error) {
+      // TODO: переделать в тосты
       console.error('Ошибка при входе:', error);
     }
     finally {
@@ -26,9 +31,13 @@ export const SignUpPage = () => {
     }
   };
 
-  const onChange = (token: any) => {
-    setToken(token);
+  const onChange = (tokenFromCaptcha: string | null) => {
+    setToken(tokenFromCaptcha ?? '');
   };
+
+  if (isAuth) {
+    return <Navigate to={ROUTES.root} />
+  }
 
   return (
     <div className="auth-wrapper">
@@ -43,7 +52,7 @@ export const SignUpPage = () => {
             <label className={`${errors.email || isError ? cls.error : '' } ${cls.label}`}>Пароль:</label>
             <input className={`default-input ${cls.input} ${errors.email || isError ? cls.error : ''}`} type="password" {...register("password", { required: "Введите ваш пароль" })} />
           </div>
-          <ReCAPTCHA className={cls.recaptcha} sitekey="6LcdztopAAAAAP5pG1HofPXWwrEfoFzT6-MLtPkM" onChange={onChange} />
+          <ReCAPTCHA className={cls.recaptcha} sitekey={process.env.AUTH_CAPTCHA_SITE_KEY ?? ''} onChange={onChange} />
           <div className={cls.buttons}>
             <button className="button" type="submit" disabled={isLoading}>Зарегистрироваться</button>
             <button className="button" type="button" onClick={() => navigation(ROUTES.signIn)} disabled={isLoading}>Войти</button>
@@ -53,4 +62,3 @@ export const SignUpPage = () => {
     </div>
   );
 };
-

@@ -1,23 +1,20 @@
-export interface Credentials {
+export interface AuthState {
+  user: CurrentUser | null
+}
+
+export interface AuthResponse {
+  accessToken: string
+}
+
+export interface AuthRequestDto {
   email: string
   password: string
+  token: string
 }
 
-export interface AuthState {
-  isAuth: boolean
-  user: User | null
-  accessToken: string | null
-}
-
-export interface User {
+export interface CurrentUser {
   id: string
   name: string
   email: string
   created_at: string
-}
-
-export interface AuthResponse {
-  user: User
-  accessToken: string
-  expiresIn: string
 }

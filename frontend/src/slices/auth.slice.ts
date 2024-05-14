@@ -1,56 +1,41 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../app/store/store';
-import { AuthState } from '../shared/interfaces/auth.interface';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { authService } from '../shared/api/auth.api';
 
+import type { AuthResponse, AuthState, CurrentUser } from '../shared/interfaces/auth.interface';
+
+const { currentUser, signIn, logout, signUp } = authService.endpoints;
+
 const initialState: AuthState = {
-  isAuth: false,
-  user: null,
-  accessToken: null
+  user: null
 };
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: () => ({}),
+  reducers: {
+    setUser: (state, action: PayloadAction<CurrentUser>) => {
+      state.user = action.payload
+    }
+  },
   extraReducers: (builder) => {
     builder
-      .addMatcher(
-        authService.endpoints.signIn.matchFulfilled,
-        (state, action) => {
-          state.isAuth = true;
-          state.user = action.payload.user;
-          state.accessToken = action.payload.accessToken;
+      .addMatcher(currentUser.matchFulfilled, (state, action: PayloadAction<CurrentUser>) => {
+        state.user = action.payload;
+      })
+      .addMatcher(signIn.matchFulfilled, ( _, action: PayloadAction<AuthResponse>) => {
+          sessionStorage.setItem('accessToken', action.payload.accessToken);
         }
       )
-      .addMatcher(
-        authService.endpoints.refreshTokens.matchFulfilled,
-        (state, action) => {
-          if (action.payload.user && action.payload.accessToken) {
-            state.isAuth = true;
-            state.user = action.payload.user;
-            state.accessToken = action.payload.accessToken;
-          }
+      .addMatcher(logout.matchFulfilled, (state) => {
+         sessionStorage.clear();
+         state.user = null;
         }
       )
-      .addMatcher(
-        authService.endpoints.logout.matchFulfilled,
-        (state) => {
-          state.isAuth = false;
-          state.user = null;
-          state.accessToken = null;
-        }
-      )
-      .addMatcher(
-        authService.endpoints.signUp.matchFulfilled,
-        (state, action) => {
-          state.isAuth = true;
-          state.user = action.payload.user;
-          state.accessToken = action.payload.accessToken;
+      .addMatcher(signUp.matchFulfilled, (_, action: PayloadAction<AuthResponse>) => {
+          sessionStorage.setItem('accessToken', action.payload.accessToken);
         }
       );
   },
 });
 
-export const selectIsAuthenticated = (state: RootState) => state.auth.isAuth;
-export default authSlice.reducer;
+export const { actions: authActions, reducer: authReducer } = authSlice;

@@ -4,5 +4,5 @@ export const {
   useSignInMutation,
   useLogoutMutation,
   useSignUpMutation,
-  useRefreshTokensMutation
+  useCurrentUserQuery,
 } = authService

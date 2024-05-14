@@ -1,24 +1,28 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import ReCAPTCHA from 'react-google-recaptcha';
-import { useSignInMutation } from '../../shared/api';
-import { ROUTES } from '../../shared/constants/routes';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { Credentials } from '../../shared/interfaces/auth.interface';
 import cls from  './sign-in.module.scss';
 
-export const SignInPage = () => {
-  const navigation = useNavigate();
-  const [token, setToken] = useState('');
-  const [signIn, { isLoading, isError }] = useSignInMutation();
-  const { register, reset, handleSubmit, formState: { errors } } = useForm<Credentials>();
+import React, { useState } from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { useAppSelector } from '../../shared/hooks/redux-hooks';
 
-  const onSubmit: SubmitHandler<Credentials> = async ({ email, password }) => {
+import { useSignInMutation } from '../../shared/api';
+import { ROUTES } from '../../shared/constants';
+import type { AuthRequestDto } from '../../shared/interfaces/auth.interface';
+
+export default function SignInPage() {
+  const navigation = useNavigate();
+  const [token, setToken] = useState<string>('');
+  const isAuth = useAppSelector(({ auth }) => auth.user);
+  const [signIn, { isLoading, isError }] = useSignInMutation();
+  const { register, reset, handleSubmit, formState: { errors } } = useForm<AuthRequestDto>();
+
+  const onSubmit: SubmitHandler<AuthRequestDto> = async ({ email, password }) => {
     try {
       await signIn({ email, password, token }).unwrap();
-      navigation(ROUTES.root);
     }
     catch (error) {
+      // TODO: переделать в тосты
       console.error('Ошибка при входе:', error);
     }
     finally {
@@ -26,9 +30,13 @@ export const SignInPage = () => {
     }
   };
 
-  const onChange = (token: any) => {
-    setToken(token);
+  const onChange = (tokenFromCaptcha: string | null) => {
+    setToken(tokenFromCaptcha ?? '');
   };
+
+  if (isAuth) {
+    return <Navigate to={ROUTES.root} />;
+  }
 
   return (
     <div className="auth-wrapper">
@@ -43,7 +51,7 @@ export const SignInPage = () => {
             <label className={`${errors.password || isError ? cls.error : '' } ${cls.label}`}>Пароль:</label>
             <input  className={`default-input ${cls.input} ${errors.password || isError ? cls.error : ''}`} type="password" {...register("password", { required: "Введите ваш пароль" })} />
           </div>
-          <ReCAPTCHA className={cls.recaptcha} sitekey="6LcdztopAAAAAP5pG1HofPXWwrEfoFzT6-MLtPkM" onChange={onChange} />
+          <ReCAPTCHA className={cls.recaptcha} sitekey={process.env.AUTH_CAPTCHA_SITE_KEY ?? ''} onChange={onChange} />
           <div className={cls.buttons}>
             <button className="button" type="submit" disabled={isLoading}>Войти</button>
             <button className="button" type="button" onClick={() => navigation(ROUTES.signUp)} disabled={isLoading}>Зарегистрироваться</button>

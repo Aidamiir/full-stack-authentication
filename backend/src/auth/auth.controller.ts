@@ -1,6 +1,6 @@
 import {
   Body,
-  Controller,
+  Controller, Get,
   HttpCode,
   Post,
   Req,
@@ -9,10 +9,12 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { request, Request, response, Response } from 'express';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
 import { RecaptchaGuard } from './guards/recaptcha.guard';
+import { Auth } from './decorators/auth.decorator';
+import { CurrentUser } from './decorators/user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -43,8 +45,14 @@ export class AuthController {
     return response;
   }
 
+  @Auth()
+  @Get('get-current')
+  async currentUser(@CurrentUser('id') id: string) {
+    return this.authService.getCurrent(id);
+  }
+
   @HttpCode(200)
-  @Post('sign-in/access-token')
+  @Post('sign-in/refresh-token')
   async getNewTokens(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
