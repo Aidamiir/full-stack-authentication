@@ -1,8 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-
-import { api } from '../../shared/api/api';
-import { authReducer } from '../../slices';
-import { listenerMiddleware } from '../../shared/utils';
+import { api } from '../../shared/api';
+import { authReducer, listenerMiddleware } from '../../entities/user/model';
 
 export const store = configureStore({
   reducer: {

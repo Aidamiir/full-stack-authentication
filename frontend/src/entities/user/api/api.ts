@@ -1,11 +1,18 @@
-import { api } from './api';
-import type { AuthRequestDto, AuthResponse, CurrentUser } from '../interfaces/auth.interface';
+import { api } from '../../../shared/api';
+import type { AuthRequestDto, AuthResponse, CurrentUser } from '../model';
 
-export const authService = api.injectEndpoints({
+const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
     signIn: builder.mutation<AuthResponse, AuthRequestDto>({
       query: (credentials) => ({
         url: '/auth/login',
+        method: 'POST',
+        body: credentials,
+      }),
+    }),
+    signUp: builder.mutation<AuthResponse, AuthRequestDto>({
+      query: (credentials) => ({
+        url: '/auth/register',
         method: 'POST',
         body: credentials,
       }),
@@ -16,15 +23,11 @@ export const authService = api.injectEndpoints({
         method: 'POST',
       }),
     }),
-    signUp: builder.mutation<AuthResponse, AuthRequestDto>({
-      query: (credentials) => ({
-        url: '/auth/register',
-        method: 'POST',
-        body: credentials,
-      }),
-    }),
     currentUser: builder.query<CurrentUser, void>({
       query: () => '/auth/get-current'
     }),
   }),
 });
+
+export const { signIn, signUp, logout, currentUser } = authApi.endpoints;
+export const { useSignInMutation, useSignUpMutation, useLogoutMutation, useCurrentUserQuery } = authApi;

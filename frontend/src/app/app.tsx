@@ -1,13 +1,15 @@
-import { Suspense, lazy } from 'react';
+import 'react-toastify/dist/ReactToastify.min.css';
+
+import { Suspense, lazy, Fragment } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import { RequireAuth } from './hoc';
-import { ROUTES } from '../shared/constants';
-import { useCurrentUserQuery } from '../shared/api';
+import { ROUTES } from '../shared/model';
+import { ToastContainer } from 'react-toastify';
+import { RequireAuth, useCurrentUserQuery } from '../entities/user';
 
-const HomePage = lazy(() => import('../pages/home/home'));
-const SignInPage = lazy(() => import('../pages/sign-in/sing-in'));
-const SignUpPage = lazy(() => import('../pages/sign-up/sign-up'));
+const Home = lazy(() => import('../pages/home/page'));
+const SignIn = lazy(() => import('../pages/sign-in/page'));
+const SignUp = lazy(() => import('../pages/sign-up/page'));
 
 export const App = () => {
   const { isLoading } = useCurrentUserQuery();
@@ -17,13 +19,16 @@ export const App = () => {
   }
 
   return (
-    <Routes>
-      <Route path={ROUTES.signIn} element={<Suspense><SignInPage /></Suspense>} />
-      <Route path={ROUTES.signUp} element={<Suspense><SignUpPage /></Suspense>} />
-      <Route element={<RequireAuth/>}>
-        <Route path={ROUTES.root} element={<Suspense><HomePage /></Suspense>} />
-      </Route>
-    </Routes>
+    <Fragment>
+      <Routes>
+        <Route path={ROUTES.signIn} element={<Suspense><SignIn /></Suspense>} />
+        <Route path={ROUTES.signUp} element={<Suspense><SignUp /></Suspense>} />
+        <Route element={<RequireAuth/>}>
+          <Route path={ROUTES.root} element={<Suspense><Home /></Suspense>} />
+        </Route>
+      </Routes>
+      <ToastContainer position="top-center" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="dark" />
+    </Fragment>
   );
 };
 

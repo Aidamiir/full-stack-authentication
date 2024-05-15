@@ -1,8 +1,2 @@
-import { authService } from './auth.api';
-
-export const {
-  useSignInMutation,
-  useLogoutMutation,
-  useSignUpMutation,
-  useCurrentUserQuery,
-} = authService
+export { api } from './api';
+export { baseQueryWithReAuth } from './query';

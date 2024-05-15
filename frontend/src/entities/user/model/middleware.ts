@@ -1,14 +1,13 @@
 import { createListenerMiddleware } from '@reduxjs/toolkit';
-import { authService } from '../api/auth.api';
-import { CurrentUser } from '../interfaces/auth.interface';
-import { authActions } from '../../slices';
+import { signIn, signUp } from '../api';
+import { setUser } from './slice';
+import type { CurrentUser } from './types';
 
 export const listenerMiddleware = createListenerMiddleware();
 
-listenerMiddleware.startListening({
-  matcher: authService.endpoints.signIn.matchFulfilled,
-
-  effect: async (_, api) => {
+// TODO: исправить any
+const fetchCurrentUser = async (api: any) => {
+  try {
     api.cancelActiveListeners();
 
     const token = sessionStorage.getItem('accessToken');
@@ -24,6 +23,14 @@ listenerMiddleware.startListening({
     });
 
     const data = await response.json() as CurrentUser;
-    api.dispatch(authActions.setUser(data));
-  }
-});
+    api.dispatch(setUser(data));
+  } catch {}
+};
+
+listenerMiddleware.startListening({ matcher: signIn.matchFulfilled, effect: async (_, api) => {
+  fetchCurrentUser(api);
+}});
+
+listenerMiddleware.startListening({ matcher: signUp.matchFulfilled, effect: async (_, api) => {
+  fetchCurrentUser(api);
+}});

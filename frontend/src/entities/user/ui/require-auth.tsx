@@ -1,7 +1,7 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
-import { ROUTES } from '../../shared/constants';
-import { useAppSelector } from '../../shared/hooks/redux-hooks';
+import { ROUTES } from '../../../shared/model';
+import { useAppSelector } from '../../../shared/lib/hooks/redux-hooks';
 
 export const RequireAuth = () => {
   const location = useLocation();
