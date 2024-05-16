@@ -2,10 +2,10 @@ import 'react-toastify/dist/ReactToastify.min.css';
 
 import { Suspense, lazy, Fragment } from 'react';
 import { Route, Routes } from 'react-router-dom';
-
-import { ROUTES } from '../shared/model';
 import { ToastContainer } from 'react-toastify';
-import { RequireAuth, useCurrentUserQuery } from '../entities/user';
+
+import { ROUTES } from '@shared/model';
+import { RequireAuth, useCurrentUserQuery } from '@entities/user';
 
 const Home = lazy(() => import('../pages/home/page'));
 const SignIn = lazy(() => import('../pages/sign-in/page'));

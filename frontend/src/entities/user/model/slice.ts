@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { AuthResponse, AuthState, CurrentUser } from './types';
-import { currentUser, logout, signIn, signUp } from '../api';
+import type { AuthResponse, AuthState, CurrentUser } from '@entities/user/model/types';
+import { currentUser, logout, signIn, signUp } from '@entities/user/api';
 
 const initialState: AuthState = {
   user: null

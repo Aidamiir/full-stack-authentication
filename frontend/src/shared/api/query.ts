@@ -31,10 +31,6 @@ export const baseQueryWithReAuth: TQueryWithReAuth = async (args, api, extraOpti
       sessionStorage.setItem('accessToken', data.accessToken);
       result = await baseQueryWithRetry(args, api, extraOptions);
     }
-    else {
-      await baseQuery({url: '/auth/logout', method: 'POST'}, api, extraOptions);
-      sessionStorage.clear();
-    }
   }
 
   return result;

@@ -1,4 +1,4 @@
-import { api } from '../../../shared/api';
+import { api } from '@shared/api';
 import type { AuthRequestDto, AuthResponse, CurrentUser } from '../model';
 
 const authApi = api.injectEndpoints({

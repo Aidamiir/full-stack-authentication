@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { api } from '../../shared/api';
-import { authReducer, listenerMiddleware } from '../../entities/user/model';
+
+import { api } from '@shared/api';
+import { authReducer, listenerMiddleware } from '@entities/user';
 
 export const store = configureStore({
   reducer: {
@@ -12,5 +13,3 @@ export const store = configureStore({
     return defaultMiddleware.concat([listenerMiddleware.middleware, api.middleware]);
   },
 });
-
-export type RootState = ReturnType<typeof store.getState>;

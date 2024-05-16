@@ -1,12 +1,13 @@
-import { createListenerMiddleware } from '@reduxjs/toolkit';
+import { createListenerMiddleware, ListenerEffectAPI, ThunkDispatch, UnknownAction } from '@reduxjs/toolkit';
+
 import { signIn, signUp } from '../api';
-import { setUser } from './slice';
+import { setUser } from '@entities/user/model/slice';
+
 import type { CurrentUser } from './types';
 
 export const listenerMiddleware = createListenerMiddleware();
 
-// TODO: исправить any
-const fetchCurrentUser = async (api: any) => {
+const fetchCurrentUser = async (api: ListenerEffectAPI<unknown, ThunkDispatch<unknown, unknown, UnknownAction>>) => {
   try {
     api.cancelActiveListeners();
 

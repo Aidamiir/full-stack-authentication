@@ -1,5 +1,5 @@
-import { isErrorWithMessage } from './is-error-with-message';
 import type { ToastPromiseParams } from 'react-toastify';
+import { isErrorWithMessage } from './is-error-with-message';
 
 export const getToastPromiseMessages:GetToastPromiseMessages = (props) => {
   const { pending, success, error = 'Произошла непредвиденная ошибка' } = props;
@@ -14,15 +14,13 @@ export const getToastPromiseMessages:GetToastPromiseMessages = (props) => {
     error: {
       render: ({ data }) => {
       const isError = isErrorWithMessage(data);
-      const message = isError ? data.data.message : error;
-      return message;
+      return isError ? data.data.message : error;
     }
   }
 }
 };
 
-// TODO: временный костыль в типизации any
-type GetToastPromiseMessages<T = any> = (props: PropsMessages) => ToastPromiseParams<T>;
+type GetToastPromiseMessages<T = unknown> = (props: PropsMessages) => ToastPromiseParams<T>;
 
 type PropsMessages = {
   pending: string;
