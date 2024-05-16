@@ -18,7 +18,7 @@ export class AuthController {
     return response;
   };
 
-  @Post('signUp') @HttpCode(200)
+  @Post('sign-up') @HttpCode(200)
   @ReCaptcha() @UsePipes(new ValidationPipe())
   async signUp(@Body() dto: AuthDto, @Res({ passthrough: true }) res: Response) {
     const { refreshToken, ...response } = await this.authService.signUp(dto);

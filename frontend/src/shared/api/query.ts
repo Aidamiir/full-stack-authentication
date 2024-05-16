@@ -8,9 +8,7 @@ const baseQuery = fetchBaseQuery({
   prepareHeaders: (headers: Headers): Headers => {
     const accessToken = sessionStorage.getItem('accessToken');
 
-    if (accessToken) {
-      headers.set('authorization', `Bearer ${accessToken}`);
-    }
+    if (accessToken) headers.set('authorization', `Bearer ${accessToken}`);
 
     return headers;
   },
