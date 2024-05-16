@@ -20,17 +20,21 @@ export const SignUpForm = () => {
 
   const onSubmit: SubmitHandler<AuthRequestDto> = async ({ email, password }) => {
     try {
-      await toast.promise(signUp({ email, password, token }).unwrap(), getToastPromiseMessages({
-        pending: 'Идёт проверка..',
-        success: 'Регистрация прошла успешно, добро пожаловать!',
-        error: 'Произошла ошибка, проверьте данные или попробуйте позже('
-      }));
+      if (!token) {
+        toast.error('Пройдите капчу!');
+      }
+      else {
+        await toast.promise(signUp({ email, password, token }).unwrap(), getToastPromiseMessages({
+          pending: 'Идёт проверка..',
+          success: 'Регистрация прошла успешно, добро пожаловать!',
+          error: 'Произошла ошибка, проверьте данные или попробуйте позже(',
+        }));
+        reset();
+      }
     }
     catch {
-      setCaptchaKey(prevKey => prevKey + 1);
-    }
-    finally {
       reset();
+      setCaptchaKey(prevKey => prevKey + 1);
     }
   };
 
